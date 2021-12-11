@@ -1,0 +1,22 @@
+---
+# Install the package
+- name: Fix MTU live if needed
+  raw: "ip link set mtu {{ network_setup__initial_interface_mtu }} dev {{ network_setup__primary_network_interface }}"
+  when:
+    - network_setup__initial_interface_mtu is defined
+
+- name: Setup DNS if none exist
+  raw: 'echo "nameserver {{ network_setup__initial_dns }}" > /etc/resolv.conf'
+  when:
+    - '"nameserver" not in groups or groups["nameserver"]|length == 0'
+    - network_setup__initial_dns is defined
+
+- name: Fix MTU on /etc/network/interfaces
+  lineinfile:
+    path: "/etc/network/interfaces"
+    insertafter: '^iface {{ network_setup__primary_network_interface }}'
+    line: ' post-up ip link set mtu {{ network_setup__initial_interface_mtu }} dev {{ network_setup__primary_network_interface }}'
+  when:
+    - python_installed|default('True')
+    - network_setup__initial_interface_mtu is defined
+...

@@ -1,0 +1,6 @@
+---
+# defaults file for network_setup
+network_setup__install: False
+network_setup__configure: False
+network_setup__initial_dns: "8.8.8.8"
+...
