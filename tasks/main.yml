@@ -17,6 +17,5 @@
     insertafter: '^iface {{ network_setup__primary_network_interface }}'
     line: ' post-up ip link set mtu {{ network_setup__initial_interface_mtu }} dev {{ network_setup__primary_network_interface }}'
   when:
-    - python_installed|default('True')
     - network_setup__initial_interface_mtu is defined
 ...
